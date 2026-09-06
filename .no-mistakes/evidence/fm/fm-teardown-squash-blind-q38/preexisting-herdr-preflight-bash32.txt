@@ -1,0 +1,61 @@
+Pre-existing failure: tests/fm-teardown.test.sh :: herdr-preflight-missing-adapter
+Reproduced on stock macOS /bin/bash, GNU bash, version 3.2.57(1)-release (arm64-apple-darwin26)
+generated 2026-09-06T20:58:44Z
+
+1) Same test, unmodified origin/main (base commit f91a950):
+   $ cd <worktree of f91a950> && bash tests/<only test_herdr_flat_teardown_preflight_refuses_before_changes>
+   not ok - herdr-preflight-missing-adapter: teardown continued without its required preflight
+   exit=1
+
+2) Same test at this branch's target commit (7325c58):
+   not ok - herdr-preflight-missing-adapter: teardown continued without its required preflight
+   exit=1
+
+   Identical failure. bin/fm-teardown.sh on this branch adds 7 lines, all of them
+   full-line comments; with comment lines stripped the two files are byte-identical:
+   $ diff <(grep -v '^#' base/bin/fm-teardown.sh) <(grep -v '^#' head/bin/fm-teardown.sh)
+   (no differences)
+
+3) Root cause, isolated to 8 lines of shell (no firstmate code involved):
+   set -eu
+   cleanup() { local s=0; echo "trap-ran"; return 0; }
+   trap cleanup EXIT
+   inner() {
+     local name=$1
+     case "$name" in
+       herdr)
+         if [ -z "${_G:-}" ]; then
+           . "/tmp/nm-scratch/backends/herdr.sh" || return 1
+           _G=1
+         fi
+         ;;
+     esac
+   }
+   outer() {
+     if ! inner herdr; then echo "converted-to-refusal" >&2; return 1; fi
+     echo "prereqs-ok"
+   }
+   outer || { echo "outer-failed"; exit 1; }
+   echo "reached-end"
+
+   $ /bin/bash srctest2.sh
+   /tmp/nm-scratch/srctest2.sh: line 9: /tmp/nm-scratch/backends/herdr.sh: No such file or directory
+   trap-ran
+   exit=0
+
+   Under 'set -e', bash 3.2 treats a failed 'source' of a missing file as fatal and
+   exits the shell immediately - the '|| return 1' never runs, so fm_backend_source's
+   refusal path (bin/fm-backend.sh:614) is never reached and
+   teardown_herdr_require_prerequisites never prints its 'nothing was changed' refusal.
+   The EXIT trap (teardown_release_locks) then succeeds, and bash 3.2 reports the
+   trap's status, so the process exits 0 - which is what the assertion sees.
+
+   Variant matrix on this /bin/bash (exit status of the shell itself):
+   no set -e, no trap     exit=0   output: f rc=1 | after | /bin/bash: /nope/x.sh: No such file or directory
+   set -e, no trap        exit=1   output: /bin/bash: /nope/x.sh: No such file or directory
+   set -e + EXIT trap     exit=0   output: trap-ran | /bin/bash: /nope/x.sh: No such file or directory
+
+   CI runs tests/fm-teardown.test.sh on ubuntu-latest (bash 5); the stock macOS
+   bash 3.2 lane in .github/workflows/ci.yml runs only parse checks and three named
+   snapshot tests, not this file. So this failure is local-environment-only and
+   pre-existing on main - out of scope for this branch.

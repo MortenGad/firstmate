@@ -1,0 +1,114 @@
+fm-teardown.sh - squash-merged / pipeline-rebased task cleanup
+branch fm/fm-teardown-squash-blind-q38 @ 7325c58   generated 2026-09-06T20:56:07Z
+
+Every run below is the real bin/fm-teardown.sh against a real git origin whose
+PR 7 was genuinely squash-merged after the pipeline rebased the branch onto a
+main that had edited the same file. Only the forge client (gh/gh-axi) and the
+worktree-return helper (treehouse) are stubbed; the landed-work decision is the
+product's own.
+
+===============================================================================
+SCENARIO q2
+The reported case: PR squash-merged, local worktree followed the pipeline rebase.
+Teardown must FINISH - no --force, no override.
+===============================================================================
+PR 7 on the forge        : MERGED (squash), head 7b92acf
+origin/main              : 23c1a7a  feat: squash (#7)
+local task HEAD          : 7b92acf  edit shared from feature
+local HEAD vs PR head    : identical (worktree followed the pipeline rebase)
+commits not on origin/main:
+    7b92acf edit shared from feature
+    9296bdf add feature
+
+$ fm-teardown.sh task-x1
+  /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q2/project: synced d274db6..23c1a7a
+  teardown task-x1 complete (window firstmate:fm-task-x1, worktree /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q2/wt)
+  Backlog: task-x1 just finished (this home keeps no backlog at /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q2/data/backlog.md). Update /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q2/data/backlog.md - move task-x1 to Done, keep Done to the 10 most recent, then re-scan Queued and dispatch only work whose blockers are gone and date is due.
+  $? = 0
+
+observable outcome
+  destructive worktree return : INVOKED -> treehouse return --force /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q2/wt
+  task record task-x1.meta    : cleared - task finished
+  task branch fm/task-x1      : HEAD
+
+===============================================================================
+SCENARIO q3
+PR squash-merged, but the local worktree still holds a DIFFERENT version of the
+same file the PR landed. Same path is not proof the local content landed.
+Teardown must REFUSE.
+===============================================================================
+PR 7 on the forge        : MERGED (squash), head 7506a86
+origin/main              : 03be079  feat: squash (#7)
+local task HEAD          : 5bb7952  edit shared from feature
+local HEAD vs PR head    : DIVERGED
+commits not on origin/main:
+    5bb7952 edit shared from feature
+    4faa91f add feature
+
+$ fm-teardown.sh task-x1
+  REFUSED: worktree /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q3/wt has work not on any remote and not landed.
+  unpushed commits:
+  5bb7952 edit shared from feature
+  4faa91f add feature
+  Push the branch, land its PR, or get the captain's explicit OK to discard, then --force.
+  $? = 1
+
+observable outcome
+  destructive worktree return : never invoked (nothing was returned or reset)
+  task record task-x1.meta    : RETAINED - task still open, captain can retry
+  task branch fm/task-x1      : fm/task-x1
+
+===============================================================================
+SCENARIO q4
+Exactly the q2 ALLOW case plus ONE genuinely unlanded local follow-up commit.
+That commit alone must flip the decision. Teardown must REFUSE.
+===============================================================================
+PR 7 on the forge        : MERGED (squash), head 5e1b8a3
+origin/main              : 080ba9b  feat: squash (#7)
+local task HEAD          : e64a48f  local follow-up
+local HEAD vs PR head    : DIVERGED
+commits not on origin/main:
+    e64a48f local follow-up
+    5e1b8a3 edit shared from feature
+    80ac090 add feature
+
+$ fm-teardown.sh task-x1
+  REFUSED: worktree /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q4/wt has work not on any remote and not landed.
+  unpushed commits:
+  e64a48f local follow-up
+  5e1b8a3 edit shared from feature
+  80ac090 add feature
+  Push the branch, land its PR, or get the captain's explicit OK to discard, then --force.
+  $? = 1
+
+observable outcome
+  destructive worktree return : never invoked (nothing was returned or reset)
+  task record task-x1.meta    : RETAINED - task still open, captain can retry
+  task branch fm/task-x1      : fm/task-x1
+
+===============================================================================
+SCENARIO q5
+Forge unreachable and the local content is not in the default branch.
+Teardown must REFUSE rather than guess. 
+===============================================================================
+PR 7 on the forge        : UNREACHABLE (gh/gh-axi erroring)
+origin/main              : 1e4ce86  feat: squash (#7)
+local task HEAD          : 3d5a6d8  edit shared from feature
+local HEAD vs PR head    : DIVERGED
+commits not on origin/main:
+    3d5a6d8 edit shared from feature
+    2113d28 add feature
+
+$ fm-teardown.sh task-x1
+  REFUSED: worktree /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-teardown-tests.ErIIE6/tx-q5/wt has work not on any remote and not landed.
+  unpushed commits:
+  3d5a6d8 edit shared from feature
+  2113d28 add feature
+  Push the branch, land its PR, or get the captain's explicit OK to discard, then --force.
+  $? = 1
+
+observable outcome
+  destructive worktree return : never invoked (nothing was returned or reset)
+  task record task-x1.meta    : RETAINED - task still open, captain can retry
+  task branch fm/task-x1      : fm/task-x1
+
