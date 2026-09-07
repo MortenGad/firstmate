@@ -1,0 +1,19 @@
+Regression property of the three new tests: run unchanged against base bin/ (1533f47)
+and against this branch bin/ (35ea074). Only bin/ differs between the two columns.
+
+--- base 1533f47 -----------------------------------------------------------
+not ok - fm-captain-hold.sh complete after pr= disarmed the armed poll
+not ok - fm-control.sh relaunch control_relaunch_tx= after pr= disarmed the armed poll
+ok - a genuinely altered or unbound poll is still refused
+not ok - fm-control.sh relaunch disarmed the armed merge poll
+
+--- branch 35ea074 ---------------------------------------------------------
+ok - fm-captain-hold.sh complete after pr= leaves the armed poll bound
+ok - fm-control.sh relaunch after pr= leaves the armed poll bound
+ok - a genuinely altered or unbound poll is still refused
+ok - fm-control relaunch: an armed merge poll stays bound after control_relaunch_tx=
+
+--- branch 35ea074, PATH without tasks-axi ---------------------------------
+ok - skipped: tasks-axi is not installed, so the origin attestation is inert
+ok - fm-control.sh relaunch after pr= leaves the armed poll bound
+ok - a genuinely altered or unbound poll is still refused

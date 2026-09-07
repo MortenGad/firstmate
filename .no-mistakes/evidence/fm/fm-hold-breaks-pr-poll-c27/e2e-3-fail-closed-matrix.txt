@@ -1,0 +1,13 @@
+repo under test: /Users/mortengad/.no-mistakes/worktrees/e3dc15625518/01M1WWPTRJW420GWMYJ1EM8D86 (35ea074)
+
+appended after pr= in state/task-a.meta        | expected  | what bin/fm-watch.sh tells firstmate
+------------------------------------------------------------------------------------------------------------------------------------------------------
+(nothing - plain armed poll)                   | ACCEPT    | check: task-a.check.sh: merged
+control_relaunch_tx=12345.20260907T0000Z.1     | ACCEPT    | check: task-a.check.sh: merged
+decisions_reviewed=1 + decision_keys=          | ACCEPT    | check: task-a.check.sh: merged
+some_future_key=whatever                       | ACCEPT    | check: task-a.check.sh: merged
+x_request=req-1                                | ACCEPT    | check: task-a.check.sh: merged
+pr=https://github.com/o/r/pull/99 (2nd pr=)    | REFUSE    | check: rejected unauthenticated state checks: task-a.check.sh
+# not-a-key                                    | REFUSE    | check: rejected unauthenticated state checks: task-a.check.sh
+not a key=1                                    | REFUSE    | check: rejected unauthenticated state checks: task-a.check.sh
+pr_head=not-a-sha                              | REFUSE    | check: rejected unauthenticated state checks: task-a.check.sh

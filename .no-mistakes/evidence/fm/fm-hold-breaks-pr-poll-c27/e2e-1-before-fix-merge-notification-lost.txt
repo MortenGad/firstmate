@@ -1,0 +1,41 @@
+repo under test: /tmp/fm-base-1533f47
+commit:          <archived base copy>
+
+=== 1. captain arms the merge poll:  bin/fm-pr-check.sh task-a https://github.com/o/r/pull/10
+armed: state/task-a.check.sh
+
+=== state/task-a.meta once the poll is armed
+window=firstmate:fm-task-a
+endpoint_task_id=task-a
+worktree=/private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/repro-base.RoImH5/wt
+project=/private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/repro-base.RoImH5/project
+kind=ship
+mode=no-mistakes
+pr=https://github.com/o/r/pull/10
+pr_head=0123456789abcdef0123456789abcdef01234567
+
+=== 2. a real later writer runs:  bin/fm-captain-hold.sh complete task-a --none
+
+=== state/task-a.meta after that writer (note what now sits below pr=)
+window=firstmate:fm-task-a
+endpoint_task_id=task-a
+worktree=/private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/repro-base.RoImH5/wt
+project=/private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/repro-base.RoImH5/project
+kind=ship
+mode=no-mistakes
+pr=https://github.com/o/r/pull/10
+pr_head=0123456789abcdef0123456789abcdef01234567
+decisions_reviewed=1
+decision_keys=
+
+=== 3. the PR merges; one bounded bin/fm-watch.sh cycle
+
+=== what firstmate is told (bin/fm-watch.sh stdout)
+check: rejected unauthenticated state checks: /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/repro-base.RoImH5/home/state/task-a.check.sh
+(watcher exit=0)
+
+=== durable wake queue row (state/.wake-queue)
+1788751161	1	check	unauthenticated-state-checks	check: rejected unauthenticated state checks: /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/repro-base.RoImH5/home/state/task-a.check.sh
+
+=== verdict
+MERGE NOTIFICATION LOST - the armed poll was refused as unauthenticated
