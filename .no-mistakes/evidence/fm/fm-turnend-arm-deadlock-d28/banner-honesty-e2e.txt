@@ -1,0 +1,46 @@
+═══════════════════════════════════════════════════════════════════════
+The refusal banner is keyed on the fork, not on the call  (HEAD e823344)
+═══════════════════════════════════════════════════════════════════════
+All three homes below have four tasks in flight and no live watcher, so the
+guard refuses each turn end. What differs is whether the refusal could really
+start anything.
+
+───── a refusal that CAN prime: the session owns the home lock
+  Stop hook exit 2; the model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home, so no generation claim owns recovery yet.
+     ●  This refusal primed a detached watcher start that survives it, so it cannot guarantee the next refusal - verify whether a watcher took the home lock before treating the Stop hook as broken.
+     ●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  a cycle WAS detached:
+      3482     1 bash <home>/bin/fm-watch-arm.sh
+      3520  3482 bash <home>/bin/fm-watch.sh
+
+───── away mode is on: the auto-arm stands down, so nothing is forked
+  Stop hook exit 2; the model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+     ●  Away mode owns watcher supervision; load /afk and ensure the daemon is running instead of starting normal supervision directly.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  no cycle was detached: no fm-watch process exists for this home.
+
+(state/.lock names pid 5002, command name "claude". The shared harness-liveness
+predicate reports it LIVE, and it is not an ancestor of this hook, so it is a
+foreign session owner and the auto-arm identity gate stands every firing down.)
+
+───── a foreign live session-lock owner: the identity gate forks nothing
+  Stop hook exit 2; the model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+     ●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  no cycle was detached: no fm-watch process exists for this home.
+
+The two documented open conditions still refuse - the change does not claim to
+close them - but neither refusal tells the model a recovery start is in flight.

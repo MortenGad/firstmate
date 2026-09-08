@@ -1,0 +1,130 @@
+═══════════════════════════════════════════════════════════════════════
+SCENARIO A - the reported incident
+═══════════════════════════════════════════════════════════════════════
+Both homes start in the state recorded on 2026-09-06 05:00-05:40: four parked
+tasks in flight, the watcher gone after delivering its last wake, and
+state/.claude-autoarm-epoch frozen at "epoch=165 owner_pid=41746 outcome=rewake".
+
+───── BEFORE  (base 6d396da) ─────
+
+$ turn 1 ends
+  -> Stop BLOCKED (hook exit 2); the asyncRewake arm is cancelled. The model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+     ●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+     state/.turnend-claude-blocks: session=sess-incident-2026-09-06 count=1 epoch=165 
+     live watcher on state/.watch.lock: NONE
+
+$ turn 2 ends
+  -> Stop BLOCKED (hook exit 2); the asyncRewake arm is cancelled. The model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+     ●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+     state/.turnend-claude-blocks: session=sess-incident-2026-09-06 count=1 epoch=165 
+     live watcher on state/.watch.lock: NONE
+
+$ turn 3 ends
+  -> Stop BLOCKED (hook exit 2); the asyncRewake arm is cancelled. The model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+     ●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+     state/.turnend-claude-blocks: session=sess-incident-2026-09-06 count=1 epoch=165 
+     live watcher on state/.watch.lock: NONE
+
+$ turn 4 ends
+  -> Stop BLOCKED (hook exit 2); the asyncRewake arm is cancelled. The model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+     ●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+     state/.turnend-claude-blocks: session=sess-incident-2026-09-06 count=1 epoch=165 
+     live watcher on state/.watch.lock: NONE
+
+  Every turn end refused. The epoch never moved, the block count never moved,
+  no watcher ever came back. This is the state the operator could only escape
+  by restarting the session.
+
+───── AFTER  (e823344) ─────
+
+$ turn 1 ends
+  -> Stop BLOCKED (hook exit 2); the asyncRewake arm is cancelled. The model is handed:
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ●  TURN WOULD END BLIND - SUPERVISION IS OFF
+     ●  4 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+     ●  The Stop-owned auto-arm did not claim this home, so no generation claim owns recovery yet.
+     ●  This refusal primed a detached watcher start that survives it, so it cannot guarantee the next refusal - verify whether a watcher took the home lock before treating the Stop hook as broken.
+     ●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+     ●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+     state/.turnend-claude-blocks: session=sess-incident-2026-09-06 count=1 epoch=165 
+     live watcher on state/.watch.lock: NONE
+
+  The detached cycle that refusal primed is live, and its watcher holds the
+  home lock - started by the refused Stop itself, outside the harness session:
+    65314     1 bash <home>/bin/fm-watch-arm.sh
+    65359 65314 bash <home>/bin/fm-watch.sh
+    65612 65359 bash <home>/bin/fm-watch.sh
+
+$ turn 2 ends
+  -> Stop ALLOWED (hook exit 0); the turn ends and the asyncRewake arm runs.
+     state/.claude-autoarm-epoch : epoch=166 owner_pid=65949 outcome=arming updated_at=1788776782
+     state/.turnend-claude-blocks: <none>
+     live watcher on state/.watch.lock: pid 65359
+
+  The next turn end was allowed by a live watcher, and the auto-arm chain that
+  had been frozen at generation 165 is running again - with no session restart.
+
+═══════════════════════════════════════════════════════════════════════
+SCENARIO B - the bounded escape the incident could never spend
+═══════════════════════════════════════════════════════════════════════
+Scenario A above already reproduced the reported budget line verbatim -
+"count=1 epoch=165", unchanged across every refusal. Here the same home is set
+up so the bounded attended fail-open is in principle AVAILABLE: the frozen epoch
+is a FAILED one whose single notice is already consumed. A live lock holder whose
+beacon is stale past the grace - the third symptom in the report - refuses every
+watcher start, so no primed cycle can succeed and the fail-open is the only exit.
+(This seeding starts the counter at 0 rather than the report own 1, because an
+already-consumed failure notice initialises it there; the pinning is the same.)
+
+───── BEFORE  (base 6d396da) ─────
+  turn 1: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=0 epoch=165 
+  turn 2: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=0 epoch=165 
+  turn 3: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=0 epoch=165 
+  turn 4: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=0 epoch=165 
+  turn 5: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=0 epoch=165 
+  The count never advances: it is keyed on an epoch that cannot change, so the
+  bounded fail-open is unreachable and every turn end refuses forever.
+
+───── AFTER  (e823344) ─────
+  turn 1: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=0 epoch=165 
+  turn 2: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=1 epoch=165 
+  turn 3: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=2 epoch=165 
+  turn 4: hook exit 2   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=3 epoch=165 
+  turn 5: hook exit 0   state/.turnend-claude-blocks = session=sess-incident-2026-09-06 count=4 epoch=165 
+
+  The bounded attended fail-open the incident could never reach:
+  
+  $ turn 5 ends
+    -> Stop ALLOWED (hook exit 0); the turn ends and the asyncRewake arm runs.
+       {"systemMessage":"FIRSTMATE SUPERVISION IS GENUINELY DOWN: 4 task(s) in flight, the Stop-owned auto-arm exhausted its bounded retries and one failure notice, no watcher or automatic continuation exists, and the block budget is exhausted. Keep this session attended and diagnose the automatic Stop-hook and watcher startup before relying on unattended supervision."}
+
+  Each of those refusals also primed a cycle, and each cycle the wedged lock
+  holder refused still recorded why, in state/.watch-cycle-exits.log:
+    arm_pid=81281	watcher_pid=81415	origin=started	started_at=1788776820	ended_at=1788776821	exit_code=1	signal=none	reason=nonzero-exit	beacon_age=21554821	lock_before=pid:73539|identity:Mon Sep  7 12:26:40 2026     sleep 400	lock_after=pid:73539|identity:Mon Sep  7 12:26:40 2026     sleep 400	successor=none
+    arm_pid=82425	watcher_pid=82478	origin=started	started_at=1788776822	ended_at=1788776822	exit_code=1	signal=none	reason=nonzero-exit	beacon_age=21554822	lock_before=pid:73539|identity:Mon Sep  7 12:26:40 2026     sleep 400	lock_after=pid:73539|identity:Mon Sep  7 12:26:40 2026     sleep 400	successor=none
+
