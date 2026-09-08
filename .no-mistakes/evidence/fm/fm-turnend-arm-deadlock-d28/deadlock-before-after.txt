@@ -1,0 +1,232 @@
+==============================================================================
+BEFORE the fix - branch base b84e0e3
+==============================================================================
+seeded incident state:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=165 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop 1 ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+state immediately after the refusal:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=165 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+waiting up to 10s for a watcher this Stop may have primed...
+RESULT: no watcher ever came up.
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=165 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop 2 ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=165 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop 3 ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=165 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+live watcher process:
+    <none>
+watcher lifecycle ledger (state/.watch-cycle-exits.log) after the cycle ends:
+    <no cycle ever ran>
+
+==============================================================================
+AFTER the fix - branch head 915761e
+==============================================================================
+seeded incident state:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=165 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop 1 ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home, so nothing owns recovery and restoring supervision is on you.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+state immediately after the refusal:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=2 epoch=165 
+    watcher holding home lock   : none
+    primed cycle processes      : 21638 
+waiting up to 10s for a watcher this Stop may have primed...
+RESULT: a watcher came up and holds the home lock.
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: session=sess-deadlock count=2 epoch=165 
+    watcher holding home lock   : 21679
+    primed cycle processes      : 21638 21679 21917 
+
+--- Stop 2 ---------------------------------------------------------------
+guard exit=0  (ALLOWED - the turn ends)
+(no output)
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=165 owner_pid=41746 outcome=rewake updated_at=1788664081
+    state/.turnend-claude-blocks: <absent, reset by an allowed stop>
+    watcher holding home lock   : 21679
+    primed cycle processes      : 21638 21679 21917 
+
+The turn ended normally - the deadlock is broken.
+
+live watcher process:
+    21679 21638 bash /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-deadlock-repro.1yc8Fl/after/bin/fm-watch.sh
+watcher lifecycle ledger (state/.watch-cycle-exits.log) after the cycle ends:
+    arm_pid=21638	watcher_pid=21679	origin=started	started_at=1788907574	ended_at=1788907575	exit_code=143	signal=TERM	reason=arm-interrupted	beacon_age=1	lock_before=pid:21679|identity:Wed Sep  9 00:46:14 2026     bash /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-deadlock-repro.1yc8Fl/after/bin/fm-watch.sh	lock_after=pid:none|identity:none	successor=none
+
+==============================================================================
+BEFORE the fix - advancing epoch (166 failed -> 167 rewake), branch base b84e0e3
+==============================================================================
+seeded state: fresh failed epoch 166 with its failure notice
+    state/.claude-autoarm-epoch : epoch=166 owner_pid=999 outcome=failed updated_at=1788907576
+    state/.turnend-claude-blocks: <absent, reset by an allowed stop>
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop A (fresh failed epoch 166 spends its one handoff) ----------------
+guard exit=0  (ALLOWED - the turn ends)
+(no output)
+    state/.claude-autoarm-epoch : epoch=166 owner_pid=999 outcome=failed updated_at=1788907576
+    state/.turnend-claude-blocks: session=sess-deadlock count=0 epoch=166 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+the auto-arm now advances the epoch to 167 outcome=rewake, which then ages out:
+    state/.claude-autoarm-epoch : epoch=167 owner_pid=41746 outcome=rewake updated_at=2
+    state/.turnend-claude-blocks: session=sess-deadlock count=0 epoch=166 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop B ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+waiting up to 10s for a watcher this Stop may have primed...
+RESULT: no watcher ever came up.
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=167 owner_pid=41746 outcome=rewake updated_at=2
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=167 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop C ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=167 owner_pid=41746 outcome=rewake updated_at=2
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=167 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop D ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home either, so recovery is NOT already under way.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=167 owner_pid=41746 outcome=rewake updated_at=2
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=167 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+live watcher process:
+    <none>
+
+==============================================================================
+AFTER the fix - advancing epoch (166 failed -> 167 rewake), branch head 915761e
+==============================================================================
+seeded state: fresh failed epoch 166 with its failure notice
+    state/.claude-autoarm-epoch : epoch=166 owner_pid=999 outcome=failed updated_at=1788907626
+    state/.turnend-claude-blocks: <absent, reset by an allowed stop>
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop A (fresh failed epoch 166 spends its one handoff) ----------------
+guard exit=0  (ALLOWED - the turn ends)
+(no output)
+    state/.claude-autoarm-epoch : epoch=166 owner_pid=999 outcome=failed updated_at=1788907626
+    state/.turnend-claude-blocks: session=sess-deadlock count=0 epoch=166 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+the auto-arm now advances the epoch to 167 outcome=rewake, which then ages out:
+    state/.claude-autoarm-epoch : epoch=167 owner_pid=41746 outcome=rewake updated_at=2
+    state/.turnend-claude-blocks: session=sess-deadlock count=0 epoch=166 
+    watcher holding home lock   : none
+    primed cycle processes      : 
+
+--- Stop B ---------------------------------------------------------------
+guard exit=2  (REFUSED - the turn cannot end)
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+●  TURN WOULD END BLIND - SUPERVISION IS OFF
+●  1 task(s) in flight, but no live watcher holds this home lock (last beat: never).
+●  The Stop-owned auto-arm did not claim this home, so nothing owns recovery and restoring supervision is on you.
+●  watcher supervision needs Stop-owned automatic recovery; inspect the hook registration and startup status before ending the turn.
+●━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+waiting up to 10s for a watcher this Stop may have primed...
+RESULT: a watcher came up and holds the home lock.
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=167 owner_pid=41746 outcome=rewake updated_at=2
+    state/.turnend-claude-blocks: session=sess-deadlock count=1 epoch=167 
+    watcher holding home lock   : 28913
+    primed cycle processes      : 28889 28913 29130 29168 
+
+--- Stop C ---------------------------------------------------------------
+guard exit=0  (ALLOWED - the turn ends)
+(no output)
+state before the next Stop:
+    state/.claude-autoarm-epoch : epoch=167 owner_pid=41746 outcome=rewake updated_at=2
+    state/.turnend-claude-blocks: <absent, reset by an allowed stop>
+    watcher holding home lock   : 28913
+    primed cycle processes      : 28889 28913 29130 
+
+The turn ended normally - the deadlock is broken.
+
+live watcher process:
+    28913 28889 bash /private/var/folders/hg/5q3jmyw50ln9sxy7c8800vgr0000gn/T/fm-deadlock-repro.1yc8Fl/after-adv/bin/fm-watch.sh
+
